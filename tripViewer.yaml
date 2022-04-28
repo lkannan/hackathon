@@ -1,0 +1,28 @@
+apiVersion: apps/v1                            # defines the API version we use
+kind: Deployment                               # type of config object
+metadata:
+  name: tripviewer   
+  namespace: web             
+spec:
+  selector:
+    matchLabels:
+      app: tripviewer                   # this deployment will only 'look after' pods with this label
+  replicas: 2                                  # tells deployment to run 2 pods matching the template
+  template:                                    # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: tripviewer                     # selector of deployment must match the label the pod. label are key-value pairs.
+    spec:
+      containers:                              # definition of the containers in the spec
+      - image: registrybnk1575.azurecr.io/tripinsights/tripviewer:1.0   # name of docker image you want to use
+        name: tripviewer
+        env:
+        - name: USERPROFILE_API_ENDPOINT
+          value: "http://userprofile.api.svc.cluster.local"
+        - name: TRIPS_API_ENDPOINT
+          value: "http://trips.api.svc.cluster.local"
+        - name: BING_MAPS_KEY
+          value: ""
+        imagePullPolicy: Always
+                        # the port exposed with the container, replace with relevant port  
+     
